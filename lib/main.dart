@@ -9,7 +9,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(primaryColor: const Color(0xFF00529C)),
       home: const BriHomeScreen(),
     );
   }
@@ -21,13 +20,13 @@ class BriHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[900], // Background biru tua khas BRImo
+      backgroundColor: const Color(0xFF00529C), // Background Biru BRI
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
           "Selamat Pagi, Afifatul",
-          style: TextStyle(fontSize: 16, color: Colors.white),
+          style: TextStyle(fontSize: 14, color: Colors.white),
         ),
         actions: const [
           Icon(Icons.help_outline, color: Colors.white),
@@ -36,39 +35,40 @@ class BriHomeScreen extends StatelessWidget {
           SizedBox(width: 15),
         ],
       ),
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          color: Colors.white, // Bagian bawah berwarna putih
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
+      body: Stack(
+        children: [
+          // Bagian Putih di Bawah yang Melengkung
+          Container(
+            margin: const EdgeInsets.only(top: 100),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF5F6F9),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              // --- KARTU SALDO ---
-              _buildBalanceCard(),
-              const SizedBox(height: 25),
-
-              // --- GRID MENU ---
-              _buildMenuGrid(),
-              const SizedBox(height: 25),
-
-              // --- BANNER PROMO ---
-              _buildPromoBanner(),
-            ],
+          // Isi Konten
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                _buildBalanceCard(),
+                const SizedBox(height: 25),
+                _buildMenuGrid(),
+                const SizedBox(height: 25),
+                _buildPromoBanner(),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: const Color(0xFF00529C),
         type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: "Riwayat"),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: "Mutasi"),
           BottomNavigationBarItem(
             icon: Icon(Icons.qr_code_scanner),
             label: "QRIS",
@@ -82,60 +82,46 @@ class BriHomeScreen extends StatelessWidget {
     );
   }
 
-  // Widget Kartu Saldo
   Widget _buildBalanceCard() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF00529C),
-        borderRadius: BorderRadius.circular(20),
-        image: const DecorationImage(
-          image: NetworkImage(
-            'https://www.transparenttextures.com/patterns/cubes.png',
-          ), // Tekstur kartu
-          opacity: 0.1,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text("Saldo Rekening", style: TextStyle(color: Colors.white70)),
-          const SizedBox(height: 5),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
+              Text(
+                "Saldo Rekening",
+                style: TextStyle(color: Colors.grey, fontSize: 12),
+              ),
               Text(
                 "Rp 1.234.567",
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: Color(0xFF00529C),
                 ),
               ),
-              Icon(Icons.visibility_off, color: Colors.white70),
             ],
           ),
-          const Divider(color: Colors.white24, height: 30),
-          const Text(
-            "Nomor Rekening: 1234-01-000123-50-1",
-            style: TextStyle(color: Colors.white70, fontSize: 12),
-          ),
+          const Icon(Icons.visibility_off, color: Colors.grey),
         ],
       ),
     );
   }
 
-  // Widget Menu (Grid 4 Kolom)
   Widget _buildMenuGrid() {
     final List<Map<String, dynamic>> menus = [
       {'icon': Icons.swap_horiz, 'label': 'Transfer'},
       {'icon': Icons.account_balance_wallet, 'label': 'Dompet Digital'},
       {'icon': Icons.receipt_long, 'label': 'BRIVA'},
       {'icon': Icons.phone_android, 'label': 'Pulsa/Data'},
-      {'icon': Icons.bolt, 'label': 'Listrik'},
-      {'icon': Icons.credit_card, 'label': 'Kartu Kredit'},
-      {'icon': Icons.confirmation_number, 'label': 'Beli Tiket'},
-      {'icon': Icons.grid_view, 'label': 'Lainnya'},
     ];
 
     return GridView.builder(
@@ -143,25 +129,20 @@ class BriHomeScreen extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
-        mainAxisSpacing: 20,
       ),
       itemCount: menus.length,
       itemBuilder: (context, index) {
         return Column(
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue[50],
-                shape: BoxShape.circle,
-              ),
+            CircleAvatar(
+              backgroundColor: const Color(0xFFE3F2FD),
               child: Icon(menus[index]['icon'], color: const Color(0xFF00529C)),
             ),
             const SizedBox(height: 8),
             Text(
               menus[index]['label'],
-              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 11),
+              textAlign: TextAlign.center,
             ),
           ],
         );
@@ -172,17 +153,11 @@ class BriHomeScreen extends StatelessWidget {
   Widget _buildPromoBanner() {
     return Container(
       height: 120,
-      width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Colors.orange[100],
+        color: Colors.blue[100],
       ),
-      child: const Center(
-        child: Text(
-          "Promo Spesial Untukmu!",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
+      child: const Center(child: Text("Promo BRImo Terbaru")),
     );
   }
 }
